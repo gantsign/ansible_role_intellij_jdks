@@ -1,0 +1,49 @@
+---
+language: python
+
+env:
+  global:
+    - MOLECULEW_USE_SYSTEM=true
+
+matrix:
+  include:
+    - env:
+        - MOLECULEW_ANSIBLE=2.4.6
+        - MOLECULE_SCENARIO=default
+      python: '2.7'
+    - env:
+        - MOLECULEW_ANSIBLE=2.6.1
+        - MOLECULE_SCENARIO=centos
+      python: '2.7'
+    - env:
+        - MOLECULEW_ANSIBLE=2.6.1
+        - MOLECULE_SCENARIO=python3
+      python: '3.6'
+
+# Require the standard build environment
+sudo: required
+
+# Require Ubuntu 14.04
+dist: trusty
+
+# Require Docker
+services:
+  - docker
+
+install:
+  # Install dependencies
+  - ./moleculew wrapper-install
+
+  # Display versions
+  - ./moleculew wrapper-versions
+
+script:
+  - ./moleculew test --scenario-name=$MOLECULE_SCENARIO
+
+branches:
+  only:
+    - master
+    - /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)([\.\-].*)?$/
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

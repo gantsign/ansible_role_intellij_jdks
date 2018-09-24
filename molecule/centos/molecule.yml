@@ -9,8 +9,8 @@ lint:
   name: yamllint
 
 platforms:
-  - name: ansible_role_intellij_jdks_community
-    image: ubuntu:18.04
+  - name: ansible_role_intellij_jdks_centos
+    image: centos:7
 
 provisioner:
   name: ansible
@@ -18,7 +18,7 @@ provisioner:
     name: ansible-lint
 
 scenario:
-  name: default
+  name: centos
 
 verifier:
   name: testinfra

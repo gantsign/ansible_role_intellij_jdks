@@ -1,0 +1,51 @@
+---
+- name: Converge
+  hosts: all
+
+  pre_tasks:
+    - name: create test users
+      become: yes
+      user:
+        name: '{{ item }}'
+        state: present
+        home: '/home/{{ item }}'
+        createhome: yes
+      with_items:
+        - test_usr
+        - test_usr2
+
+    - name: install which
+      become: yes
+      yum:
+        name: which
+        state: present
+
+    - name: install jdk 8
+      become: yes
+      yum:
+        name: java-1.8.0-openjdk-devel
+        state: present
+
+    - name: install jdk 7
+      become: yes
+      yum:
+        name: java-1.7.0-openjdk-devel
+        state: present
+
+    - name: set facts for openjdk locations
+      set_fact:
+        jdk7_home: '/usr/lib/jvm/java-1.7.0-openjdk'
+        jdk8_home: '/usr/lib/jvm/java-1.8.0-openjdk'
+
+  roles:
+    - role: ansible_role_intellij_jdks
+      intellij_jdks_intellij_user_dirname: '.IntelliJIdea2018.2'
+      users:
+        - username: test_usr
+          intellij_jdks:
+            - name: '1.8'
+              home: '{{ jdk8_home }}'
+            - name: '1.7'
+              home: '{{ jdk7_home }}'
+          intellij_jdks_default: '1.8'
+        - username: test_usr2
