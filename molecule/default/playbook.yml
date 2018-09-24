@@ -1,5 +1,74 @@
 ---
 - name: Converge
   hosts: all
+
+  pre_tasks:
+    - name: create test users
+      become: yes
+      user:
+        name: '{{ item }}'
+        state: present
+        home: '/home/{{ item }}'
+        createhome: yes
+      with_items:
+        - test_usr
+        - test_usr2
+
+    - name: install jdk 8
+      become: yes
+      apt:
+        name: openjdk-8-jdk
+        state: present
+
+    - name: install jdk 8 source
+      become: yes
+      apt:
+        name: openjdk-8-source
+        state: present
+
+    - name: create jdk 10 installation directory
+      become: yes
+      file:
+        state: directory
+        owner: root
+        group: root
+        mode: 'u=rwx,go=rx'
+        dest: '/opt/java/jdk-10'
+
+    - name: download jdk 10
+      get_url:
+        url: 'https://api.adoptopenjdk.net/v2/binary/releases/openjdk10?openjdk_impl=hotspot&os=linux&arch=x64&release=jdk-10.0.1%2B10&type=jdk'
+        dest: '/opt/java/jdk-10.tar.gz'
+        force: no
+        use_proxy: yes
+        validate_certs: yes
+        timeout: 360
+        mode: 'u=rw,go=r'
+
+    - name: install jdk 10
+      become: yes
+      unarchive:
+        src: '/opt/java/jdk-10.tar.gz'
+        remote_src: yes
+        dest: '/opt/java/jdk-10'
+        owner: root
+        group: root
+        creates: '/opt/java/jdk-10/jdk-10.0.1+10/bin'
+
+    - name: set facts for openjdk locations
+      set_fact:
+        jdk8_home: '/usr/lib/jvm/java-1.8.0-openjdk-amd64'
+        jdk10_home: '/opt/java/jdk-10/jdk-10.0.1+10'
+
   roles:
     - role: ansible_role_intellij_jdks
+      intellij_jdks_intellij_user_dirname: '.IntelliJIdea2018.2'
+      users:
+        - username: test_usr
+          intellij_jdks:
+            - name: '1.8'
+              home: '{{ jdk8_home }}'
+            - name: '10'
+              home: '{{ jdk10_home }}'
+          intellij_jdks_default: '1.8'
+        - username: test_usr2

@@ -1,2 +1,35 @@
 ---
-# tasks file for ansible_role_intellij_jdks
+- name: install Python XML support (Python 2)
+  become: yes
+  package:
+    name: python-lxml
+    state: present
+  when: "intellij_jdks_python_major_version == '2'"
+
+- name: install Python XML support (Python 3)
+  become: yes
+  package:
+    name: "python3-lxml"
+    state: present
+  when: "intellij_jdks_python_major_version == '3'"
+
+- name: configure JDKs
+  become: yes
+  become_user: '{{ item.0.username }}'
+  intellij_jdks_configure:
+    intellij_user_dirname: '{{ intellij_jdks_intellij_user_dirname }}'
+    jdk_name: '{{ item.1.name }}'
+    jdk_home: '{{ item.1.home }}'
+  with_subelements:
+    - '{{ users | default([]) }}'
+    - intellij_jdks
+    - skip_missing: yes
+
+- name: set default JDK
+  become: yes
+  become_user: '{{ item.username }}'
+  intellij_jdks_set_default:
+    intellij_user_dirname: '{{ intellij_jdks_intellij_user_dirname }}'
+    jdk_name: '{{ item.intellij_jdks_default }}'
+  with_items: '{{ users | default([]) }}'
+  when: "(item.intellij_jdks_default is defined and item.intellij_jdks_default not in (None, '', omit)) and (item.intellij_jdks is defined and item.intellij_jdks not in ([], None, '', omit))"
