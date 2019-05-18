@@ -9,7 +9,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 @pytest.mark.parametrize('file_path,expected_text', [
     ('jdk.table.xml', '/usr/lib/jvm/java-1.8.0-openjdk'),
-    ('jdk.table.xml', '/opt/java/jdk-10/jdk-10.0.1+10'),
+    ('jdk.table.xml', '/opt/java/jdk-11/jdk-11.0.3+7'),
     ('project.default.xml', 'project-jdk-name="1.8"'),
 ])
 def test_config_files(host, file_path, expected_text):
