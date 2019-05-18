@@ -32,4 +32,6 @@
     intellij_user_dirname: '{{ intellij_jdks_intellij_user_dirname }}'
     jdk_name: '{{ item.intellij_jdks_default }}'
   with_items: '{{ users | default([]) }}'
-  when: "(item.intellij_jdks_default is defined and item.intellij_jdks_default not in (None, '', omit)) and (item.intellij_jdks is defined and item.intellij_jdks not in ([], None, '', omit))"
+  when:
+    - item.intellij_jdks_default is defined and item.intellij_jdks_default not in (None, '', omit)
+    - item.intellij_jdks is defined and item.intellij_jdks not in ([], None, '', omit)
