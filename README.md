@@ -11,7 +11,7 @@ Role to configure JDKs in the IntelliJ IDEA IDE
 Requirements
 ------------
 
-* Ansible >= 2.5
+* Ansible >= 2.6
 
 * Linux Distribution
 
