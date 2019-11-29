@@ -27,11 +27,13 @@
 
 - name: set default JDK
   become: yes
-  become_user: '{{ item.username }}'
+  become_user: '{{ user.username }}'
   intellij_jdks_set_default:
     intellij_user_dirname: '{{ intellij_jdks_intellij_user_dirname }}'
-    jdk_name: '{{ item.intellij_jdks_default }}'
+    jdk_name: '{{ user.intellij_jdks_default }}'
   with_items: '{{ users | default([]) }}'
+  loop_control:
+    loop_var: user
   when:
-    - item.intellij_jdks_default is defined and item.intellij_jdks_default not in (None, '', omit)
-    - item.intellij_jdks is defined and item.intellij_jdks not in ([], None, '', omit)
+    - user.intellij_jdks_default is defined and user.intellij_jdks_default not in (None, '', omit)
+    - user.intellij_jdks is defined and user.intellij_jdks not in ([], None, '', omit)
