@@ -24,6 +24,8 @@
     - '{{ users | default([]) }}'
     - intellij_jdks
     - skip_missing: yes
+  loop_control:
+    label: '{{ item.0.username }}: {{ item.1.name }}'
 
 - name: set default JDK
   become: yes
@@ -34,6 +36,7 @@
   with_items: '{{ users | default([]) }}'
   loop_control:
     loop_var: user
+    label: '{{ user.username }}'
   when:
     - user.intellij_jdks_default is defined and user.intellij_jdks_default not in (None, '', omit)
     - user.intellij_jdks is defined and user.intellij_jdks not in ([], None, '', omit)
