@@ -1,3 +1,3 @@
 ---
-# Directory name of user specific IntelliJ IDEA files
-intellij_jdks_intellij_user_dirname: '{{ ansible_local.intellij.general.user_dirname }}'
+# Directory containing IntelliJ IDEA user specific configuration (relative to user home)
+intellij_jdks_intellij_user_config_dir: '{{ ansible_local.intellij.general.user_config_dir }}'

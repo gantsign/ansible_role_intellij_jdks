@@ -13,8 +13,8 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     ('project.default.xml', 'project-jdk-name="1.8"'),
 ])
 def test_config_files(host, file_path, expected_text):
-    config_dir_pattern = ('\\.(IdeaIC|IntelliJIdea)[0-9]+\\.[0-9]'
-                          '/config/options$')
+    config_dir_pattern = (
+        '\\.config/JetBrains/(IdeaIC|IntelliJIdea)[0-9]+\\.[0-9]/options$')
     config_home = host.check_output('find %s | grep --color=never -E %s',
                                     '/home/test_usr',
                                     config_dir_pattern)

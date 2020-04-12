@@ -35,8 +35,8 @@ def set_attrib(elem, key, value):
     return True
 
 
-def jdk_home(module, intellij_jdks_user_dir, jdk_name):
-    jdk_table_path = os.path.join(intellij_jdks_user_dir, 'config', 'options',
+def jdk_home(module, intellij_user_config_dir, jdk_name):
+    jdk_table_path = os.path.join(intellij_user_config_dir, 'options',
                                   'jdk.table.xml')
     if not os.path.isfile(jdk_table_path):
         module.fail_json(msg='File not found: %s' % jdk_table_path)
@@ -104,13 +104,13 @@ public class SpecificationVersion {
         shutil.rmtree(dirpath)
 
 
-def set_default_jdk(module, intellij_jdks_user_dir, jdk_name):
-    options_dir = os.path.join(intellij_jdks_user_dir, 'config', 'options')
+def set_default_jdk(module, intellij_user_config_dir, jdk_name):
+    options_dir = os.path.join(intellij_user_config_dir, 'options')
 
     project_default_path = os.path.join(options_dir, 'project.default.xml')
 
     if (not os.path.isfile(project_default_path)
-       ) or os.path.getsize(project_default_path) == 0:
+            ) or os.path.getsize(project_default_path) == 0:
         if not module.check_mode:
             if not os.path.isdir(options_dir):
                 os.makedirs(options_dir, 0o775)
@@ -147,7 +147,7 @@ def set_default_jdk(module, intellij_jdks_user_dir, jdk_name):
         project_root_manager = etree.SubElement(
             default_project, 'component', name='ProjectRootManager')
 
-    default_jdk_home = jdk_home(module, intellij_jdks_user_dir, jdk_name)
+    default_jdk_home = jdk_home(module, intellij_user_config_dir, jdk_name)
     language_level = specification_version(module, default_jdk_home)
 
     changed = True in [
@@ -173,26 +173,24 @@ def set_default_jdk(module, intellij_jdks_user_dir, jdk_name):
 def run_module():
 
     module_args = dict(
-        intellij_user_dirname=dict(type='str', required=True),
+        intellij_user_config_dir=dict(type='str', required=True),
         jdk_name=dict(type='str', required=True))
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
-    intellij_user_dir = os.path.expanduser(
-        os.path.join('~', module.params['intellij_user_dirname']))
+    intellij_user_config_dir = os.path.expanduser(
+        os.path.join('~', module.params['intellij_user_config_dir']))
     jdk_name = os.path.expanduser(module.params['jdk_name'])
 
     # Check if we have lxml 2.3.0 or newer installed
     if not HAS_LXML:
         module.fail_json(
-            msg=
-            'The xml ansible module requires the lxml python library installed on the managed machine'
+            msg='The xml ansible module requires the lxml python library installed on the managed machine'
         )
     elif LooseVersion('.'.join(
             to_native(f) for f in etree.LXML_VERSION)) < LooseVersion('2.3.0'):
         module.fail_json(
-            msg=
-            'The xml ansible module requires lxml 2.3.0 or newer installed on the managed machine'
+            msg='The xml ansible module requires lxml 2.3.0 or newer installed on the managed machine'
         )
     elif LooseVersion('.'.join(
             to_native(f) for f in etree.LXML_VERSION)) < LooseVersion('3.0.0'):
@@ -200,7 +198,7 @@ def run_module():
             'Using lxml version lower than 3.0.0 does not guarantee predictable element attribute order.'
         )
 
-    changed, diff = set_default_jdk(module, intellij_user_dir, jdk_name)
+    changed, diff = set_default_jdk(module, intellij_user_config_dir, jdk_name)
 
     if changed:
         msg = '%s is now the default JDK' % jdk_name

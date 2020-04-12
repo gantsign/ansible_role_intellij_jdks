@@ -38,9 +38,9 @@ The following variables will change the behavior of this role (default values
 are shown below):
 
 ```yaml
-# Directory name of user specific IntelliJ IDEA files (e.g. `.IntelliJIdea2018.2`)
-# Note: the `ansible_local.intellij.general.user_dirname` fact is provided by the gantsign.intellij role
-intellij_jdks_intellij_user_dirname: '{{ ansible_local.intellij.general.user_dirname }}'
+# Directory containing IntelliJ IDEA user specific configuration (relative to user home)
+# Note: the `ansible_local.intellij.general.user_config_dir` fact is provided by the gantsign.intellij role
+intellij_jdks_intellij_user_config_dir: '{{ ansible_local.intellij.general.user_config_dir }}'
 ```
 
 This role must be configured per user. Users are configured as follows:

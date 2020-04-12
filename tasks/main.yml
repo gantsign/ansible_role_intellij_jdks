@@ -17,7 +17,7 @@
   become: yes
   become_user: '{{ item.0.username }}'
   intellij_jdks_configure:
-    intellij_user_dirname: '{{ intellij_jdks_intellij_user_dirname }}'
+    intellij_user_config_dir: '{{ intellij_jdks_intellij_user_config_dir }}'
     jdk_name: '{{ item.1.name }}'
     jdk_home: '{{ item.1.home }}'
   with_subelements:
@@ -31,7 +31,7 @@
   become: yes
   become_user: '{{ user.username }}'
   intellij_jdks_set_default:
-    intellij_user_dirname: '{{ intellij_jdks_intellij_user_dirname }}'
+    intellij_user_config_dir: '{{ intellij_jdks_intellij_user_config_dir }}'
     jdk_name: '{{ user.intellij_jdks_default }}'
   with_items: '{{ users | default([]) }}'
   loop_control:
