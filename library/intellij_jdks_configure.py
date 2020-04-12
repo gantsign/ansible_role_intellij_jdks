@@ -133,7 +133,7 @@ def get_source_path(module, jdk_home):
         module.fail_json(msg='Unsupported JDK directory layout: %s' % jdk_home)
 
 
-def create_jdk_xml(module, intellij_jdks_user_dir, jdk_name, jdk_home):
+def create_jdk_xml(module, jdk_name, jdk_home):
     params = {
         'jdk_name':
         xml.sax.saxutils.quoteattr(jdk_name),
@@ -173,8 +173,8 @@ def create_jdk_xml(module, intellij_jdks_user_dir, jdk_name, jdk_home):
     </jdk>''' % params)
 
 
-def configure_jdk(module, intellij_jdks_user_dir, jdk_name, jdk_home):
-    options_dir = os.path.join(intellij_jdks_user_dir, 'config', 'options')
+def configure_jdk(module, intellij_user_config_dir, jdk_name, jdk_home):
+    options_dir = os.path.join(intellij_user_config_dir, 'options')
 
     project_default_path = os.path.join(options_dir, 'jdk.table.xml')
 
@@ -206,7 +206,7 @@ def configure_jdk(module, intellij_jdks_user_dir, jdk_name, jdk_home):
         project_jdk_table = etree.SubElement(
             jdk_table_root, 'component', name='ProjectJdkTable')
 
-    new_jdk = create_jdk_xml(module, intellij_jdks_user_dir, jdk_name, jdk_home)
+    new_jdk = create_jdk_xml(module, jdk_name, jdk_home)
     new_jdk_string = pretty_print(new_jdk)
 
     old_jdk = project_jdk_table.find('./jdk/name[@value="%s"]/..' % jdk_name)
@@ -232,14 +232,14 @@ def configure_jdk(module, intellij_jdks_user_dir, jdk_name, jdk_home):
 def run_module():
 
     module_args = dict(
-        intellij_user_dirname=dict(type='str', required=True),
+        intellij_user_config_dir=dict(type='str', required=True),
         jdk_name=dict(type='str', required=True),
         jdk_home=dict(type='str', required=True))
 
     module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
 
-    intellij_user_dir = os.path.expanduser(
-        os.path.join('~', module.params['intellij_user_dirname']))
+    intellij_user_config_dir = os.path.expanduser(
+        os.path.join('~', module.params['intellij_user_config_dir']))
     jdk_name = module.params['jdk_name']
     jdk_home = os.path.expanduser(module.params['jdk_home'])
 
@@ -261,7 +261,7 @@ def run_module():
             'Using lxml version lower than 3.0.0 does not guarantee predictable element attribute order.'
         )
 
-    changed, diff = configure_jdk(module, intellij_user_dir, jdk_name, jdk_home)
+    changed, diff = configure_jdk(module, intellij_user_config_dir, jdk_name, jdk_home)
 
     if changed:
         msg = 'JDK %s has been configured' % jdk_name

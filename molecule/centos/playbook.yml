@@ -39,7 +39,7 @@
 
   roles:
     - role: ansible_role_intellij_jdks
-      intellij_jdks_intellij_user_dirname: '.IntelliJIdea2018.2'
+      intellij_jdks_intellij_user_config_dir: '.config/JetBrains/IntelliJIdea2020.1'
       users:
         - username: test_usr
           intellij_jdks:
