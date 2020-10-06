@@ -53,6 +53,7 @@
         dest: '/opt/java/jdk-11'
         owner: root
         group: root
+        mode: 'o-w'
         creates: '/opt/java/jdk-11/jdk-11.0.3+7/bin'
 
     - name: set facts for openjdk locations
