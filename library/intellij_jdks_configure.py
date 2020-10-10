@@ -156,7 +156,8 @@ def create_jdk_xml(module, jdk_name, jdk_home):
       <roots>
         <annotationsPath>
           <root type="composite">
-            <root url="jar://$APPLICATION_HOME_DIR$/lib/jdkAnnotations.jar!/" type="simple" />
+            <root url="jar://$APPLICATION_HOME_DIR$/lib/jdkAnnotations.jar!/"
+                  type="simple" />
           </root>
         </annotationsPath>
         <classPath>
@@ -178,8 +179,9 @@ def configure_jdk(module, intellij_user_config_dir, jdk_name, jdk_home):
 
     project_default_path = os.path.join(options_dir, 'jdk.table.xml')
 
-    if (not os.path.isfile(project_default_path)
-       ) or os.path.getsize(project_default_path) == 0:
+    create_jdk_table = (not os.path.isfile(project_default_path)
+                        ) or os.path.getsize(project_default_path) == 0
+    if create_jdk_table:
         if not module.check_mode:
             if not os.path.isdir(options_dir):
                 os.makedirs(options_dir, 0o775)
@@ -246,22 +248,22 @@ def run_module():
     # Check if we have lxml 2.3.0 or newer installed
     if not HAS_LXML:
         module.fail_json(
-            msg=
-            'The xml ansible module requires the lxml python library installed on the managed machine'
-        )
+            msg='The xml ansible module requires the lxml python library '
+            'installed on the managed machine')
     elif LooseVersion('.'.join(
             to_native(f) for f in etree.LXML_VERSION)) < LooseVersion('2.3.0'):
         module.fail_json(
-            msg=
-            'The xml ansible module requires lxml 2.3.0 or newer installed on the managed machine'
-        )
+            msg='The xml ansible module requires lxml 2.3.0 or newer '
+            'installed on the managed machine')
     elif LooseVersion('.'.join(
             to_native(f) for f in etree.LXML_VERSION)) < LooseVersion('3.0.0'):
         module.warn(
-            'Using lxml version lower than 3.0.0 does not guarantee predictable element attribute order.'
+            'Using lxml version lower than 3.0.0 does not guarantee '
+            'predictable element attribute order.'
         )
 
-    changed, diff = configure_jdk(module, intellij_user_config_dir, jdk_name, jdk_home)
+    changed, diff = configure_jdk(
+        module, intellij_user_config_dir, jdk_name, jdk_home)
 
     if changed:
         msg = 'JDK %s has been configured' % jdk_name
