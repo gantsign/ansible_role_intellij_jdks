@@ -1,7 +1,7 @@
 Ansible Role: IntelliJ JDKs
 ===========================
 
-[![Build Status](https://travis-ci.com/gantsign/ansible_role_intellij_jdks.svg?branch=master)](https://travis-ci.com/gantsign/ansible_role_intellij_jdks)
+[![Tests](https://github.com/gantsign/ansible_role_intellij_jdks/workflows/Tests/badge.svg)](https://github.com/gantsign/ansible_role_intellij_jdks/actions?query=workflow%3ATests)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-gantsign.intellij__jdks-blue.svg)](https://galaxy.ansible.com/gantsign/intellij_jdks)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/gantsign/ansible_role_intellij_jdks/master/LICENSE)
 
