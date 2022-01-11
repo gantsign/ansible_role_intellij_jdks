@@ -12,11 +12,14 @@ lint: |
   flake8
 
 platforms:
-  - name: ansible_role_intellij_jdks_default
-    image: ubuntu:20.04
+  - name: ansible_role_intellij_jdks_ubuntu_min
+    image: ubuntu:18.04
 
 provisioner:
   name: ansible
+  playbooks:
+    converge: ../default/converge.yml
 
 verifier:
   name: testinfra
+  directory: ../default/tests
