@@ -19,52 +19,20 @@
         - test_usr
         - test_usr2
 
-    - name: install jdk 8
+    - name: install test dependencies
       become: yes
       apt:
-        name: openjdk-8-jdk
+        name:
+          - openjdk-8-jdk
+          - openjdk-8-source
+          - openjdk-11-jdk
+          - openjdk-11-source
         state: present
-
-    - name: install jdk 8 source
-      become: yes
-      apt:
-        name: openjdk-8-source
-        state: present
-
-    - name: create jdk 11 installation directory
-      become: yes
-      file:
-        state: directory
-        owner: root
-        group: root
-        mode: 'u=rwx,go=rx'
-        dest: '/opt/java/jdk-11'
-
-    - name: download jdk 11
-      get_url:
-        url: 'https://api.adoptopenjdk.net/v2/binary/releases/openjdk11?openjdk_impl=hotspot&os=linux&arch=x64&release=jdk-11.0.3%2B7&type=jdk'
-        dest: '/opt/java/jdk-11.tar.gz'
-        force: no
-        use_proxy: yes
-        validate_certs: yes
-        timeout: 360
-        mode: 'u=rw,go=r'
-
-    - name: install jdk 11
-      become: yes
-      unarchive:
-        src: '/opt/java/jdk-11.tar.gz'
-        remote_src: yes
-        dest: '/opt/java/jdk-11'
-        owner: root
-        group: root
-        mode: 'o-w'
-        creates: '/opt/java/jdk-11/jdk-11.0.3+7/bin'
 
     - name: set facts for openjdk locations
       set_fact:
         jdk8_home: '/usr/lib/jvm/java-1.8.0-openjdk-amd64'
-        jdk11_home: '/opt/java/jdk-11/jdk-11.0.3+7'
+        jdk11_home: '/usr/lib/jvm/java-11-openjdk-amd64'
 
   roles:
     - role: ansible_role_intellij_jdks
