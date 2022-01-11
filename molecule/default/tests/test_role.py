@@ -3,7 +3,7 @@ import pytest
 
 @pytest.mark.parametrize('file_path,expected_text', [
     ('jdk.table.xml', '/usr/lib/jvm/java-1.8.0-openjdk'),
-    ('jdk.table.xml', '/opt/java/jdk-11/jdk-11.0.3+7'),
+    ('jdk.table.xml', '/usr/lib/jvm/java-11-openjdk-amd64'),
     ('project.default.xml', 'project-jdk-name="1.8"'),
 ])
 def test_config_files(host, file_path, expected_text):
