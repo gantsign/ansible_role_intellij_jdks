@@ -14,7 +14,6 @@ lint: |
 platforms:
   - name: ansible_role_intellij_jdks_rocky
     image: rockylinux/rockylinux:8
-    dockerfile: ../default/Dockerfile.j2
 
 provisioner:
   name: ansible
